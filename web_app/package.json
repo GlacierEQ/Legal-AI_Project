@@ -23,7 +23,7 @@
     "bootstrap": "^5.2.3",
     "jquery": "^3.7.0",
     "next": "latest",
-    "next-auth": "latest",
+    "next-auth": "4.24.12",
     "nodemailer": "^6",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
