@@ -1,0 +1,6 @@
+components/*
+pages/*
+public/*
+styles/*
+tests/*
+vitest.config.ts
