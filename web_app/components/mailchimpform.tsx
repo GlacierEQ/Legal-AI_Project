@@ -1,5 +1,5 @@
-import MailchimpSubscribe from "react-mailchimp-subscribe";
-import { Newsletter } from "./newsletter";
+import MailchimpSubscribe from 'react-mailchimp-subscribe';
+import { Newsletter } from './newsletter';
 
 interface FormattedFormData {
   [key: string]: string;
@@ -13,8 +13,9 @@ export const MailchimpForm = () => {
       <MailchimpSubscribe
         url={postUrl}
         render={({ subscribe, status, message }) => {
-          const formattedStatus = status || "";
-          const formattedMessage = message instanceof Error ? "Error occurred" : message || "";
+          const formattedStatus = status || '';
+          const formattedMessage =
+            message instanceof Error ? 'Error occurred' : message || '';
 
           return (
             <Newsletter

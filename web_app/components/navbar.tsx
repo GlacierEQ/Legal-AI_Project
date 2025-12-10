@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { signIn } from "next-auth/react";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import { useState, useEffect } from 'react';
+import { signIn } from 'next-auth/react';
+import { Navbar, Nav, Container } from 'react-bootstrap';
 import logo from '/assets/img/new_logo.png';
 import navIcon1 from '../assets/img/nav-icon1.svg';
 import navIcon2 from '../assets/img/nav-icon2.svg';
 import navIcon3 from '../assets/img/nav-icon3.svg';
-import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
 
 export const NavBar = () => {
   const [activeLink, setActiveLink] = useState('home');
@@ -20,19 +20,19 @@ export const NavBar = () => {
       } else {
         setScrolled(false);
       }
-    }
+    };
 
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener('scroll', onScroll);
 
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [])
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const onUpdateActiveLink = (value: string) => {
     setActiveLink(value);
-  }
+  };
 
   return (
-    <Navbar expand="md" className={scrolled ? "scrolled" : ""}>
+    <Navbar expand="md" className={scrolled ? 'scrolled' : ''}>
       <Container>
         <Navbar.Brand href="/">
           <img className="logo-css" src="/assets/img/new_logo.png" alt="Logo" />
@@ -45,27 +45,27 @@ export const NavBar = () => {
             <Nav.Link
               href="#home"
               className={
-                activeLink === "home" ? "active navbar-link" : "navbar-link"
+                activeLink === 'home' ? 'active navbar-link' : 'navbar-link'
               }
-              onClick={() => onUpdateActiveLink("home")}
+              onClick={() => onUpdateActiveLink('home')}
             >
               Home
             </Nav.Link>
             <Nav.Link
               href="#features"
               className={
-                activeLink === "skills" ? "active navbar-link" : "navbar-link"
+                activeLink === 'skills' ? 'active navbar-link' : 'navbar-link'
               }
-              onClick={() => onUpdateActiveLink("skills")}
+              onClick={() => onUpdateActiveLink('skills')}
             >
               Features
             </Nav.Link>
             <Nav.Link
               href="#dev"
               className={
-                activeLink === "projects" ? "active navbar-link" : "navbar-link"
+                activeLink === 'projects' ? 'active navbar-link' : 'navbar-link'
               }
-              onClick={() => onUpdateActiveLink("projects")}
+              onClick={() => onUpdateActiveLink('projects')}
             >
               Developers
             </Nav.Link>
@@ -93,15 +93,17 @@ export const NavBar = () => {
                     signOut();
                   }}
                 >
-                  <span style={{cursor: 'pointer'}}>Sign Out</span>
+                  <span style={{ cursor: 'pointer' }}>Sign Out</span>
                 </a>
 
                 {session.user.image && (
                   <a href="/me">
-                  <span
-                    style={{ backgroundImage: `url('${session.user.image}')` }}
-                    className="avatar-navbar"
-                  />
+                    <span
+                      style={{
+                        backgroundImage: `url('${session.user.image}')`,
+                      }}
+                      className="avatar-navbar"
+                    />
                   </a>
                 )}
               </>
