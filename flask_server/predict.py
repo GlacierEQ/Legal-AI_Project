@@ -1,16 +1,19 @@
 import torch
 import time
-from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
+from torch.utils.data import DataLoader, SequentialSampler
 from multiprocessing import cpu_count
 
 from transformers import (
     AutoConfig,
     AutoModelForQuestionAnswering,
     AutoTokenizer,
-    squad_convert_examples_to_features
+    squad_convert_examples_to_features,
 )
 
-from transformers.data.processors.squad import SquadResult, SquadV2Processor, SquadExample
+from transformers.data.processors.squad import (
+    SquadResult,
+    SquadExample,
+)
 from transformers.data.metrics.squad_metrics import compute_predictions_logits
 
 
@@ -26,20 +29,25 @@ def run_prediction(question_texts, context_text, model_path, n_best_size):
     def to_list(tensor):
         return tensor.detach().cpu().tolist()
 
-    config_class, model_class, tokenizer_class = (AutoConfig, AutoModelForQuestionAnswering, AutoTokenizer)
+    config_class, model_class, tokenizer_class = (
+        AutoConfig,
+        AutoModelForQuestionAnswering,
+        AutoTokenizer,
+    )
     config = config_class.from_pretrained(model_path)
-    tokenizer = tokenizer_class.from_pretrained(model_path, do_lower_case=True, use_fast=False)
+    tokenizer = tokenizer_class.from_pretrained(
+        model_path, do_lower_case=True, use_fast=False
+    )
     model = model_class.from_pretrained(model_path, config=config)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
-    processor = SquadV2Processor()
     examples = []
 
     timer = time.time()
     for i, question_text in enumerate(question_texts):
-        
+
         example = SquadExample(
             qas_id=str(i),
             question_text=question_text,
@@ -51,9 +59,9 @@ def run_prediction(question_texts, context_text, model_path, n_best_size):
         )
 
         examples.append(example)
-    print(f'Created Squad Examples in {time.time()-timer} seconds')
+    print(f"Created Squad Examples in {time.time() - timer} seconds")
 
-    print(f'Number of CPUs: {cpu_count()}')
+    print(f"Number of CPUs: {cpu_count()}")
     timer = time.time()
     features, dataset = squad_convert_examples_to_features(
         examples=examples,
@@ -65,7 +73,7 @@ def run_prediction(question_texts, context_text, model_path, n_best_size):
         return_dataset="pt",
         threads=cpu_count(),
     )
-    print(f'Converted Examples to Features in {time.time()-timer} seconds')
+    print(f"Converted Examples to Features in {time.time() - timer} seconds")
 
     eval_sampler = SequentialSampler(dataset)
     eval_dataloader = DataLoader(dataset, sampler=eval_sampler, batch_size=10)
@@ -97,7 +105,7 @@ def run_prediction(question_texts, context_text, model_path, n_best_size):
                 start_logits, end_logits = output
                 result = SquadResult(unique_id, start_logits, end_logits)
                 all_results.append(result)
-    print(f'Model predictions completed in {time.time()-timer} seconds') 
+    print(f"Model predictions completed in {time.time() - timer} seconds")
 
     print(all_results)
 
@@ -119,8 +127,8 @@ def run_prediction(question_texts, context_text, model_path, n_best_size):
         verbose_logging=False,
         version_2_with_negative=True,
         null_score_diff_threshold=null_score_diff_threshold,
-        tokenizer=tokenizer
+        tokenizer=tokenizer,
     )
-    print(f'Logits converted to predictions in {time.time()-timer} seconds')
+    print(f"Logits converted to predictions in {time.time() - timer} seconds")
 
     return final_predictions
